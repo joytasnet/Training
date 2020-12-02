@@ -3,19 +3,23 @@ public class BingoApp{
 	public static void main(String[] args){
 		Scanner sc=new Scanner(System.in);
 		System.out.print("幅>");
-		int n=sc.nextInt();
-		int[][] card=makeCard(n);
-		/*
-		showCard(card);
-		int[][] h=horizontalLines(card);
-		showCard(h);
-		int[][] v=verticalLines(card);
-		showCard(v);
-		int[][] c=crossLines(card);
-		showCard(c);
-		*/
-		int bingoCount=countBingoLine(card);
-		System.out.println(bingoCount);
+		int width=sc.nextInt();
+		System.out.print("最低Bingoライン数>");
+		int matchLine=sc.nextInt();
+		long total=0;
+		while(true){
+			total++;
+			int[][] card=makeCard(width);
+			int count=0;
+			count+=horizontalMatchLine(card);
+			count+=verticalMatchLine(card);
+			count+=crossMatchLine(card);
+			if(count >= matchLine){
+				showCard(card);
+				System.out.println(total+"回");
+				break;
+			}
+		}
 	}
 
 	static int[][] makeCard(int width){
@@ -29,9 +33,9 @@ public class BingoApp{
 		return card;
 	}
 	static void showCard(int[][] card){
-		for(int i=0;i<card.length;i++){
-			for(int j=0;j<card[i].length;j++){
-				System.out.print(card[i][j]);
+		for(int[] line:card){
+			for(int n:line){
+				System.out.print(n);
 			}
 			System.out.println();
 		}
@@ -47,26 +51,19 @@ public class BingoApp{
 		}
 		return isSame;
 	}
-	static int[][] horizontalLines(int[][] card){
-		int[][] lines=new int[card.length][card.length];
-		for(int i=0;i<card.length;i++){
-			for(int j=0;j<card[i].length;j++){
-				lines[i][j]=card[i][j];
-			}
-		}
-		return lines;
-
+	static int horizontalMatchLine(int[][] card){
+		return countLine(card);
 	}
-	static int[][] verticalLines(int[][] card){
+	static int verticalMatchLine(int[][] card){
 		int[][] lines=new int[card.length][card.length];
 		for(int i=0;i<card.length;i++){
-			for(int j=0;j<card[i].length;j++){
+			for(int j=0;j<card.length;j++){
 				lines[i][j]=card[j][i];
 			}
 		}
-		return lines;
+		return countLine(lines);
 	}
-	static int[][] crossLines(int[][] card){
+	static int crossMatchLine(int[][] card){
 		int[][] lines=new int[2][card.length];
 		for(int i=0;i<lines.length;i++){
 			for(int j=0;j<card.length;j++){
@@ -77,34 +74,13 @@ public class BingoApp{
 				}
 			}
 		}
-		return lines;
+		return countLine(lines);
 	}
-	static int countBingoLine(int[][] card){
+	static int countLine(int[][] temp){
 		int count=0;
-		int[][] h=horizontalLines(card);
-		int[][] v=verticalLines(card);
-		int[][] c=crossLines(card);
-		int[][] lines=mergeThreeLines(h,v,c);
-		for(int[] line:lines){
-			if(isSame(line)){
-				count++;
-			}
+		for(int[] line:temp){
+			if(isSame(line)){count++;}
 		}
 		return count;
-	}
-	static int[][] mergeThreeLines(int[][] h,int[][] v,int[][] c){
-		int[][] lines=new int[h.length+v.length+c.length][h[0].length];
-		for(int i=0;i<lines.length;i++){
-			int[] line;
-			if(i<h.length){
-				line=h[i];
-			}else if(i<h.length+v.length){
-				line=v[i-h.length];
-			}else{
-				line=c[i-h.length-v.length];
-			}
-			lines[i]=line;
-		}
-		return lines;
 	}
 }
