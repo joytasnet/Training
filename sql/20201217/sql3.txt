@@ -1,0 +1,72 @@
+カラム別名 AS句
+SELECT title AS タイトル,price AS 価格 FROM books;
+
+重複削除
+SELECT DISTINCT category FROM books;
+
+取得カラムに書ける色々
+SELECT price,price+100,'固定値' FROM books;
+
+切り捨てfloor(床)
+SELECT floor(120*1.08);
+
+3桁ごとに,挿入
+SELECT format(12345678.324352,1)
+
+CASE WHEN
+SELECT title AS 書名,category AS 分類,
+CASE category
+WHEN '雑誌' THEN '1F'
+WHEN '漫画' THEN '1F'
+ELSE '2F'
+END AS 階
+FROM books;
+
+
+//CASE WHEN (if)
+SELECT title AS 書名,price AS 価格,
+CASE
+WHEN price < 500 THEN 'えんぴつ'
+WHEN price <1000 THEN 'キーホルダー'
+WHEN price < 3000 THEN 'ポスター'
+ELSE 'トートバッグ'
+END AS プレゼント
+FROM books;
+
+//文字数char_length()
+SELECT title,char_length(title) FROM books;
+
+//現在日の入力
+INSERT INTO books(title,price,updated)
+VALUES('SQL入門',2800,curdate());
+
+//文字列連結
+SELECT concat(title,':',price,'円') FROM books;
+
+//最初のnullでない値を返すcoalesce
+SELECT title,coalesce(updated,'更新日未記入') FROM books;
+
+
+//副問合せ(subquery)
+SELECT title,price FROM books
+WHERE price=(SELECT max(price) FROM books);
+
+//内部結合
+SELECT * FROM cds
+JOIN categories
+ON cds.cat_id=categories.id;
+
+//LEFT JOIN
+SELECT * FROM cds
+LEFT JOIN categories
+ON cds.cat_id=categories.id;
+
+//RIGHT JOIN
+SELECT * FROM cds
+RIGHT JOIN categories
+ON cds.cat_id=categories.id;
+
+//取得カラムの指定
+SELECT cds.title,categories.category,cds.price FROM cds
+LEFT JOIN categories
+ON cds.cat_id=categories.id;

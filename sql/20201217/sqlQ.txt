@@ -1,0 +1,76 @@
+1500円未満の本を価格降順で抽出せよ。
+SELECT * FROM books WHERE price < 1500 ORDER BY price DESC;
+
+カテゴリー毎の平均価格を求め、平均価格が１０００円以上の本を降順に出力せよ。
+
+SELECT title,price,category FROM books
+WHERE category in (
+SELECT category FROM books
+GROUP BY category
+HAVING avg(price) >=1000
+)
+ORDER BY price DESC;
+
+カテゴリーが漫画の項目を'コミック'に変更せよ。
+UPDATE books SET category='コミック'
+WHERE category='漫画';
+
+カテゴリーが漫画で価格が400円以上のデータを抽出せよ
+SELECT * FROM books
+WHERE category='漫画' AND price >=400;
+
+
+更新日が古い順にデータを5件抽出せよ
+SELECT * FROM books
+ORDER BY updated ASC
+LIMIT 5;
+
+id 1~5をupdatedが古い順に抽出せよ
+SELECT * FROM books WHERE id BETWEEN 1 AND 5
+ORDER BY updated ASC;
+
+カテゴリーが漫画か小説の本を抽出せよ。取得カラムはカテゴリーと価格とすること。
+SELECT category,price FROM books
+WHERE category IN('漫画','小説');
+
+タイトルに「の」が入っている本を抽出せよ
+SELECT * FROM books WHERE title LIKE '%の%';
+
+タイトルに「拳」が含まれる本のカテゴリーを「ノンフィクション」に変更せよ
+UPDATE books SET category='ノンフィクション'
+WHERE title LIKE '%拳%';
+
+一番安い本を200円値上げせよ
+UPDATE books SET price=price+200
+WHERE price=(SELECT min(price) FROM books);
+
+titleに拳が含まれている本を削除せよ
+DELETE FROM books WHERE title LIKE '%拳%';
+
+21世紀以降に更新された漫画を古い順に抽出せよ。取得カラムはタイトルと更新日とする
+SELECT title,updated FROM books
+WHERE updated >='2000-01-01' AND category='漫画'
+ORDER BY updated ASC;
+
+以下の本を追加せよ。'図鑑'、'花図鑑'、2600、'2018-09-01'
+INSERT INTO books(category,title,price,updated)
+VALUES('図鑑','花図鑑',2600,'2018-09-01);
+
+カテゴリーが小説で価格が一番低いデータのタイトルと価格を抽出せよ。
+SELECT title,price FROM books
+WHERE category='小説'
+ORDER BY price ASC
+LIMIT 1
+
+カテゴリーごとの最大価格を抽出し、最大価格が500円以上のカテゴリーを昇順ソートせよ。(取得カラムはcategory,max(price))
+SELECT category,max(price) FROM books
+GROUP BY category
+HAVING max(price) >=500
+ORDER BY max(price) DESC
+
+カテゴリー毎の最安値を求め、昇順に抽出せよ。取得カラムはcategory,min(price)とする。
+SELECT category,min(price) FROM books
+GROUP BY category
+ORDER BY min(price) ASC;
+
+
