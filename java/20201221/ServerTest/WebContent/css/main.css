@@ -1,0 +1,21 @@
+@charset "UTF-8";
+body{
+	height:100vh;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+}
+.dai{
+	font-size:80px;
+	color:blue;
+}
+.chu{
+	font-size:60px;
+}
+.sho{
+	font-size:40px;
+}
+.kyo{
+	font-size:24px;
+	color:red;
+}
